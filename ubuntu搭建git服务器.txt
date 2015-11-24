@@ -1,0 +1,67 @@
+第一步： 建立git用户
+
+ 》》》 sudo useradd git (然后根据提示设置密码等信息)
+
+
+第二步： 新建空仓库
+
+ 》》》 cd/opt
+
+ 》》》 mkdir git
+
+ 》》》 cd git
+
+ 》》》 sudo git init --bare project.git  (在opt目录下新建目录git ,然后进入git目录执行 初始化 )
+
+ 》》》 sudo chown -R git:git project.git (修改用户和用户组权限) 
+
+
+(在此之前应该先安装 ssh   》》》 apt-get install ssh)
+
+第三步： 建立文件夹.ssh (用于存放需要访问的成员的 ssh-keygen)
+
+ 》》》 mkdir .ssh
+
+ps:1.生成本机的ssh-keygen：直接运行 ssh-keygen ，回车，回车。生成的密钥会在window下: “C:\Documents and Settings\userName\.ssh”，有两个文件，复制id_rsa.pub的内容给服务器管理员。在.ssh文件夹下建立 id_rsa.pub 文件 ， 或直接：cat ~/opt/.ssh/id_rsa.pub 加成员的id_rsa.pub内容 （反正添加到这个文件后面就可以）
+
+
+第四步： 禁用shell登录 （出于安全考虑，创建的git用户不允许登录shell）
+
+
+通过编辑/etc/passwd文件完成。
+
+ 》》》 sudo vi /etc/passwd
+
+找到类似下面的一行：
+
+git:x:1001:1001:,,,:/home/git:/bin/bash
+
+改为：
+
+git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell
+
+
+项目组老大要做的：
+
+1.    做一个基本项目原型，供项目成员克隆下载 ， 将已有文件推送到git服务器上
+2.    新建文件夹，git init 初始化git 。
+3.    git add *    将所有文件加入git 监控  ，可以用git status 查看监控状态
+4.    git commit -m "你的提交说明"
+5.   git remote add origin git@yourServerIP:/opt/git/project.git    (这里是将远程git服务器命名成origin，方便以后使用，名字随便改)
+6.  推送到服务器   git push origin master   意思是 : git 推送 到  服务器目录 哪个分支—master 。 至此，完毕。
+
+
+项目成员基本步骤：
+
+1.git clone git@serverIP:/opt/git/project.git     完成仓库克隆工作
+2.做该做的事，
+3.git commit -a -m "你的提交说明"
+4.git remote add origin git@yourServerIP:/opt/git/project.git
+5.git push origin master 上传分支。
+
+
+
+
+
+
+
