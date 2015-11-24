@@ -1,0 +1,3 @@
+1.$ chmod a+x VMware-Workstation-Full-11.0.0-2305329.x86_64.bundle
+
+2.$ sudo ./VMware-Workstation-Full-11.0.0-2305329.x86_64.bundle
