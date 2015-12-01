@@ -1,0 +1,7 @@
+$ sudo apt-get install dconf-tools
+
+然后执行命令重置
+$ dconf reset -f /org/compiz/
+
+最后，重启或运行此命令使其生效
+$ setsid unity

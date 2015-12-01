@@ -1,0 +1,30 @@
+----------------------
+开始折腾
+
+先安装 Emerald
+
+sudo add-apt-repository ppa:nilarimogard/webupd8 
+
+sudo apt-get update 
+
+sudo apt-get install emerald
+
+
+安装CompizConfig设置管理器：
+
+sudo apt-get install compizconfig-settings-manager
+
+
+----------------------
+乱套后执行恢复
+
+
+$ sudo apt-get install dconf-tools
+
+然后执行命令重置
+$ dconf reset -f /org/compiz/
+
+最后，重启或运行此命令使其生效
+$ setsid unity
+
+

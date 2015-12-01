@@ -1,0 +1,189 @@
+Grunt 自动化部署相关插件以及Gruntfile.js配置
+
+grunt.initConfig方法
+
+用于模块配置，它接受一个对象作为参数。该对象的成员与使用的同名模块一一对应。
+
+每个目标的具体设置，需要参考该模板的文档。就cssmin来讲，minify目标的参数具体含义如下：
+
+    expand：如果设为true，就表示下面文件名的占位符（即*号）都要扩展成具体的文件名。
+    cwd：需要处理的文件（input）所在的目录。
+    src：表示需要处理的文件。如果采用数组形式，数组的每一项就是一个文件名，可以使用通配符。
+    dest：表示处理后的文件名或所在目录。
+    ext：表示处理后的文件后缀名。
+
+ 
+
+grunt常用函数说明：
+
+grunt.initConfig：定义各种模块的参数，每一个成员项对应一个同名模块。
+grunt.loadNpmTasks：加载完成任务所需的模块。
+grunt.registerTask：定义具体的任务。第一个参数为任务名，第二个参数是一个数组， 表示该任务需要依次使用的模块。
+
+grunt常用模块：
+
+    grunt-contrib-clean：删除文件。
+    grunt-contrib-compass：使用compass编译sass文件。
+    grunt-contrib-concat：合并文件。
+    grunt-contrib-copy：复制文件。
+    grunt-contrib-cssmin：压缩以及合并CSS文件。
+    grunt-contrib-imagemin：图像压缩模块。
+    grunt-contrib-jshint：检查JavaScript语法。
+    grunt-contrib-uglify：压缩以及合并JavaScript文件。
+    grunt-contrib-watch：监视文件变动，做出相应动作。
+
+
+grunt模块安装:
+
+npm install grunt-contrib-clean --save-dev (示例: 安装clean插件)
+
+
+Gruntfile.js配置css、image、javascript、html压缩 ：
+
+module.exports = function (grunt) {
+
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+  grunt.initConfig({
+
+    //清除目录
+    clean: {
+      all: ['dist/html/**', 'dist/*.*'],
+      image: 'dist/html/images',
+      css: 'dist/html/css',
+      html: 'dist/html/**/*'
+    },
+
+    copy: {
+      src: {
+        files: [
+          {expand: true, cwd: 'src', src: ['*.html'], dest: 'dist/html'}
+        ]
+      },
+      image: {
+        files: [
+          {expand: true, cwd: 'src', src: ['images/*.{png,jpg,jpeg,gif}'], dest: 'dist/html'}
+        ]
+      }
+    },
+
+    // 文件合并
+    concat: {
+      options: {
+        separator: ';',
+        stripBanners: true
+      },
+      js: {
+        src: [
+          "src/js/*.js"
+        ],
+        dest: "dist/html/js/app.js"
+      },
+      css:{
+        src: [
+          "src/css/*.css"
+        ],
+        dest: "dist/html/css/main.css"
+      }
+    },
+
+    //压缩JS
+    uglify: {
+      prod: {
+        options: {
+          mangle: {
+            except: ['require', 'exports', 'module', 'window']
+          },
+          compress: {
+            global_defs: {
+              PROD: true
+            },
+            dead_code: true,
+            pure_funcs: [
+              "console.log",
+              "console.info"
+            ]
+          }
+        },
+
+        files: [{
+            expand: true,
+            cwd: 'dist/html',
+            src: ['js/*.js', '!js/*.min.js'],
+            dest: 'dist/html'
+        }]
+      }
+    },
+
+    //压缩CSS
+    cssmin: {
+      prod: {
+        options: {
+          report: 'gzip'
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'dist/html',
+            src: ['css/*.css'],
+            dest: 'dist/html'
+          }
+        ]
+      }
+    },
+
+    //压缩图片
+    imagemin: {
+      prod: {
+        options: {
+          optimizationLevel: 7,
+          pngquant: true
+        },
+        files: [
+          {expand: true, cwd: 'dist/html', src: ['images/*.{png,jpg,jpeg,gif,webp,svg}'], dest: 'dist/html'}
+        ]
+      }
+    },
+
+    // 处理html中css、js 引入合并问题
+    usemin: {
+      html: 'dist/html/*.html'
+    },
+
+    //压缩HTML
+    htmlmin: {
+      options: {
+        removeComments: true,
+        removeCommentsFromCDATA: true,
+        collapseWhitespace: true,
+        collapseBooleanAttributes: true,
+        removeAttributeQuotes: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeOptionalTags: true
+      },
+      html: {
+        files: [
+          {expand: true, cwd: 'dist/html', src: ['*.html'], dest: 'dist/html'}
+        ]
+      }
+    }
+
+  });
+
+
+  grunt.registerTask('prod', [
+    'copy',                 //复制文件
+    'concat',               //合并文件
+    'imagemin',             //图片压缩
+    'cssmin',               //CSS压缩
+    'uglify',               //JS压缩
+    'usemin',               //HTML处理
+    'htmlmin'               //HTML压缩
+  ]);
+
+  grunt.registerTask('publish', ['clean', 'prod']);
+};
+
+
