@@ -1,0 +1,6 @@
+Ubuntu14.04浏览器Firefox手动安装flash播放插件
+
+sudo apt-get update
+
+sudo apt-get install flashplugin-nonfree
+

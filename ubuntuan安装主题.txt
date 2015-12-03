@@ -1,0 +1,18 @@
+移除PPA：
+
+sudo apt-get install ppa-purge
+sudo ppa-purge ppa:ricotz/docky
+
+
+
+安装Numix主题
+sudo add-apt-repository ppa:numix/ppa
+sudo apt-get update
+sudo apt-get install numix-gtk-theme numix-icon-theme numix-icon-theme-circle numix-wallpaper-saucy 
+
+
+//安装一个喜欢的图标主题
+cd /usr/share/icons
+git clone https://github.com/numixproject/numix-icon-theme-utouch.git
+mv numix-icon-theme-utouch/Numix-uTouch .
+rm -rf numix-icon-theme-utouch LICENSE README.md
