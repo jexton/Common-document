@@ -96,7 +96,7 @@
 
 ![我是博客园LOGO](http://static.cnblogs.com/images/logo_small.gif)
 
-> 示例：![我是博客园LOGO] (http://static.cnblogs.com/images/logo_small.gif)
+> 示例：! [我是博客园LOGO] (http://static.cnblogs.com/images/logo_small.gif)
 
 ###### 链接引用
 
